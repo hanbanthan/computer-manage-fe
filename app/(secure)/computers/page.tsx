@@ -5,7 +5,7 @@ import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Computer {
     computer_id: string;
@@ -23,10 +23,19 @@ interface Computer {
 }
 
 export default function Computers() {
+    const [query, SetQuery] = useState("");
     const { token } = useAuth();
     const computerService = useComputerService();
     const computers = computerService.computers;
     const { currentUser } = useUserService();
+
+    const updateQuery = (query) => {
+        SetQuery(query.trim());
+    }
+
+    const clearQuery = () => {
+        updateQuery("");
+    }
 
     useEffect(() => {
         if (token) {
@@ -36,40 +45,63 @@ export default function Computers() {
 
     function TableBody() {
         if (computers?.length) {
-            return computers.map((computer: Computer) => {
-                return (
-                    <tr key={computer.computer_id}>
-                        <td>{computer.name}</td>
-                        <td>{computer.cpu}</td>
-                        <td>{computer.ram}</td>
-                        <td>{computer.ssd}</td>
-                        <td>{computer.hdd}</td>
-                        <td>{computer.room}</td>
-                        <td>{computer.building}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>
-                            {(computer.user?.username === currentUser?.username ||
-                                currentUser?.role === 'admin' ||
-                                currentUser?.role === 'superadmin') && (
-                                    <>
-                                        <Link
-                                            href={`/computers/edit/${computer.computer_id}`}
-                                            className="btn btn-sm btn-primary me-1"
-                                        >
-                                            Edit
-                                        </Link>
-                                        <button
-                                            onClick={() => computerService.deleteById(computer.computer_id, token)}
-                                            className="btn btn-sm btn-danger btn-delete-user"
-                                            style={{ width: '60px' }}
-                                        >
-                                            <span>Delete</span>
+            const showingComputers = query === "" ? computers : computers.filter((c) => c.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+            return (
+                <>
+                    {
+                        showingComputers.length !== computers.length && (
+                            <tr>
+                                <td colSpan={8}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span>
+                                            Now showing {showingComputers.length} of {computers.length}
+                                        </span>
+                                        <button className="btn btn-sm btn-secondary" onClick={clearQuery}>
+                                            Show all
                                         </button>
-                                    </>
-                                )}
-                        </td>
-                    </tr>
-                );
-            });
+                                    </div>
+                                </td>
+                            </tr>
+                        )
+                    }
+                    {
+                        showingComputers.map((computer: Computer) => {
+                            return (
+                                <tr key={computer.computer_id}>
+                                    <td>{computer.name}</td>
+                                    <td>{computer.cpu}</td>
+                                    <td>{computer.ram}</td>
+                                    <td>{computer.ssd}</td>
+                                    <td>{computer.hdd}</td>
+                                    <td>{computer.room}</td>
+                                    <td>{computer.building}</td>
+                                    <td style={{ whiteSpace: 'nowrap' }}>
+                                        {(computer.user?.username === currentUser?.username ||
+                                            currentUser?.role === 'admin' ||
+                                            currentUser?.role === 'superadmin') && (
+                                                <>
+                                                    <Link
+                                                        href={`/computers/edit/${computer.computer_id}`}
+                                                        className="btn btn-sm btn-primary me-1"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => computerService.deleteById(computer.computer_id, token)}
+                                                        className="btn btn-sm btn-danger btn-delete-user"
+                                                        style={{ width: '60px' }}
+                                                    >
+                                                        <span>Delete</span>
+                                                    </button>
+                                                </>
+                                            )}
+                                    </td>
+                                </tr>
+                            );
+                        })
+                    }
+                </>
+            )
         }
 
         if (!computers) {
@@ -107,7 +139,16 @@ export default function Computers() {
                         <th style={{ width: '13%' }}>hdd</th>
                         <th style={{ width: '13%' }}>room</th>
                         <th style={{ width: '13%' }}>building</th>
-                        <th style={{ width: '9%' }}></th>
+                        <th style={{ width: '9%' }}>
+                            <div style={{ display: 'flex' }}>
+                                🔎 <input
+                                    type="text"
+                                    placeholder="Search Contacts"
+                                    value={query}
+                                    onChange={(event) => updateQuery(event.target.value)}
+                                />
+                            </div>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
