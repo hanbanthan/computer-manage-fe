@@ -3,7 +3,7 @@ import useUserService from '@/app/_services/useUserService';
 import Link from 'next/link'
 import { useForm } from "react-hook-form";
 
-interface User {
+interface RegisterFormData {
     username: string;
     password: string;
 }
@@ -17,17 +17,15 @@ export default function Register() {
     const fields = {
         username: register('username', { 
             required: 'Username is required',
-            minLength: { value: 4, message: 'Username must be at least 6 characters' }
         }),
             
         password: register('password', {
             required: 'Password is required',
-            minLength: { value: 6, message: 'Password must be at least 6 characters' }
         })
     }
 
-    async function onSubmit(user: User) {
-        await userService.register(user);
+    async function onSubmit({ username, password}: RegisterFormData) {
+        await userService.register(username, password);
     }
 
     return (

@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import useAlertService from "./useAlertService";
-import useFetch from "../_helpers/client/useFetch";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { env } from "@/app/_helpers/config";
 
 interface IUser {
-    username: string,
-    password: string,
+    user_id?: string,
+    username?: string,
+    password?: string,
+    role?: string,
 }
 
 interface IUserStore {
@@ -17,8 +18,9 @@ interface IUserStore {
 
 interface IUserService extends IUserStore {
     login: (username: string, password: string) => Promise<void>,
-    register: (user: IUser) => Promise<void>,
-    getCurrent: () => Promise<void>,
+    register: (username: string, password: string) => Promise<void>,
+    logout: () => Promise<void>,
+    getCurrent: (token: string) => Promise<void>,
 }
 
 const initialState = {
@@ -30,9 +32,8 @@ const userStore = create<IUserStore>(() => initialState);
 
 export default function useUserService(): IUserService {
     const alertService = useAlertService();
-    const fetch = useFetch();
     const router = useRouter();
-    const searhParams = useSearchParams();
+    const searchParams = useSearchParams();
     const { user, currentUser } = userStore();
 
     return {
@@ -41,23 +42,36 @@ export default function useUserService(): IUserService {
         login: async (username, password) => {
             alertService.clear();
             try {
-                const response = await fetch.post(`${env.be.url}/api/auth/login`, { username, password });
-                const { accessToken } = response;
+                const response = await fetch(`${env.be.url}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // important to send and receive cookies
+                    body: JSON.stringify({ username, password }),
+                });
 
-                localStorage.setItem('accessToken', accessToken);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Login failed');
+                }
+                //set current user
+                const data = await response.json();
+                userStore.setState({ ...initialState, currentUser: data.user });
 
-                //get return url from query parameters or default to '/'
-                const returnUrl = searhParams.get('returnUrl') || '/';
+                // login successful, cookies should be set by server (httpOnly cookies)
+                const returnUrl = searchParams.get('returnUrl') || '/';
                 router.push(returnUrl);
+
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
         },
-        register: async (user: IUser) => {
+        register: async (username: string, password: string) => {
             try {
-                await fetch.post(`${env.be.url}/api/auth/register`, user);
+                await fetch(`${env.be.url}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
                 alertService.success('Registration successful', true);
                 router.push('/account/login');
             } catch (error) {
@@ -66,10 +80,44 @@ export default function useUserService(): IUserService {
                 );
             }
         },
-        getCurrent: async () => {
-            const response = await fetch.get(`${env.be.url}/api/auth/status`);
-            if (!currentUser) {
-                userStore.setState({ currentUser: response.user});
+        logout: async () => {
+            try {
+                await fetch(`${env.be.url}/api/auth/logout`, {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                router.push('/account/login');
+            } catch (error) {
+                alertService.error(
+                    error instanceof Error ? error.message : String(error)
+                );
+            }
+        },
+        getCurrent: async (token: string) => {
+            if (!token) return;
+            try {
+                const response = await fetch(`${env.be.url}/api/auth/status`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                    },
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current user status');
+                }
+
+                const data = await response.json();
+
+                if (!userStore.getState().currentUser) {
+                    userStore.setState({ currentUser: data.user });
+                }
+            } catch (error) {
+                alertService.error(
+                    error instanceof Error ? error.message : String(error)
+                );
             }
         }
     }

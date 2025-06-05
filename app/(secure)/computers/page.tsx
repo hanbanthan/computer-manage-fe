@@ -1,13 +1,14 @@
 'use client';
 
-import Spinner from "@/app/_components/Spinner";
+import Spinner from "@/app/_components/spinner";
+import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
 import { useEffect } from "react";
 
 interface Computer {
-    id: string;
+    computer_id: string;
     name?: string;
     cpu?: string;
     ram?: string;
@@ -15,7 +16,6 @@ interface Computer {
     hdd?: string;
     room?: string;
     building?: string;
-    isDeleting?: boolean;
     user?: {
         id: string;
         username: string;
@@ -23,56 +23,54 @@ interface Computer {
 }
 
 export default function Computers() {
+    const { token } = useAuth();
     const computerService = useComputerService();
     const computers = computerService.computers;
-    const { currentUser} = useUserService();
+    const { currentUser } = useUserService();
 
     useEffect(() => {
-        computerService.getAll();
+        if (token) {
+            computerService.getAll(token);
+        }
     }, []);
 
     function TableBody() {
-    if (computers?.length) {
-        return computers.map((computer: Computer) => {
-            console.log('Current User:', currentUser?.username);
-            console.log('Computer Owner:', computer.user?.username);
-            return (
-                <tr key={computer.id}>
-                    <td>{computer.name}</td>
-                    <td>{computer.cpu}</td>
-                    <td>{computer.ram}</td>
-                    <td>{computer.ssd}</td>
-                    <td>{computer.hdd}</td>
-                    <td>{computer.room}</td>
-                    <td>{computer.building}</td>
-                    <td style={{ whiteSpace: 'nowrap' }}>
-                        {computer.user?.username === currentUser?.username && (
-                            <>
-                                <Link
-                                    href={`/computers/edit/${computer.id}`}
-                                    className="btn btn-sm btn-primary me-1"
-                                >
-                                    Edit
-                                </Link>
-                                <button
-                                    onClick={() => computerService.deleteById(computer.id)}
-                                    className="btn btn-sm btn-danger btn-delete-user"
-                                    style={{ width: '60px' }}
-                                    disabled={computer.isDeleting}
-                                >
-                                    {computer.isDeleting ? (
-                                        <span className="spinner-border spinner-border-sm"></span>
-                                    ) : (
-                                        <span>Delete</span>
-                                    )}
-                                </button>
-                            </>
-                        )}
-                    </td>
-                </tr>
-            );
-        });
-    }
+        if (computers?.length) {
+            return computers.map((computer: Computer) => {
+                return (
+                    <tr key={computer.computer_id}>
+                        <td>{computer.name}</td>
+                        <td>{computer.cpu}</td>
+                        <td>{computer.ram}</td>
+                        <td>{computer.ssd}</td>
+                        <td>{computer.hdd}</td>
+                        <td>{computer.room}</td>
+                        <td>{computer.building}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>
+                            {(computer.user?.username === currentUser?.username ||
+                                currentUser?.role === 'admin' ||
+                                currentUser?.role === 'superadmin') && (
+                                    <>
+                                        <Link
+                                            href={`/computers/edit/${computer.computer_id}`}
+                                            className="btn btn-sm btn-primary me-1"
+                                        >
+                                            Edit
+                                        </Link>
+                                        <button
+                                            onClick={() => computerService.deleteById(computer.computer_id, token)}
+                                            className="btn btn-sm btn-danger btn-delete-user"
+                                            style={{ width: '60px' }}
+                                        >
+                                            <span>Delete</span>
+                                        </button>
+                                    </>
+                                )}
+                        </td>
+                    </tr>
+                );
+            });
+        }
 
         if (!computers) {
             return (
@@ -87,7 +85,7 @@ export default function Computers() {
         if (computers?.length === 0) {
             return (
                 <tr>
-                    <td colSpan={7} className="text-center">
+                    <td colSpan={8} className="text-center">
                         <div className="p-2">No Computers To Display</div>
                     </td>
                 </tr>

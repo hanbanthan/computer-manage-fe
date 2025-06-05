@@ -1,25 +1,23 @@
 'use client';
 
-import AddEdit from "@/app/_components/computers/AddEdit";
-import Spinner from "@/app/_components/Spinner";
+import AddEdit from "@/app/_components/computers/add-edit";
+import Spinner from "@/app/_components/spinner";
+import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
-import { useRouter } from "next/navigation";
-import { useEffect, use } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-type EditPageProps = {
-    params: {
-        id: string;
-    };
-};
-
-export default function Edit({ params }: EditPageProps) {
-    const { id } = params;
+export default function Edit() {
+    const { id } = useParams();;
+    const { token } = useAuth();
     const router = useRouter();
     const computerService = useComputerService();
     const computer = computerService.computer;
+
     
     useEffect(() => {
-        computerService.getById(id);
+        if (!id ) return;
+        computerService.getById(id, token);
     },[router]);
 
     return computer

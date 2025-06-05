@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuth } from "@/app/_context/auth-context";
 import useAlertService from "@/app/_services/useAlertService";
 import useComputerService from "@/app/_services/useComputerService";
 import Link from "next/link";
@@ -7,25 +8,27 @@ import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form";
 
 export default function AddEdit({ title, computer }: { title: string, computer?: any }) {
+    const { token } = useAuth();
     const router = useRouter();
     const alertService = useAlertService();
     const computerService = useComputerService();
 
-    //get function to build form with useForm() hook
     const { register, handleSubmit, reset, formState } = useForm({ defaultValues: computer });
     const { errors } = formState;
 
     const fields = {
-        name: register('name'),
-        cpu: register('cpu'),
-        ram: register('ram'),
-        ssd: register('ssd'),
-        hdd: register('hdd'),
-        room: register('room'),
-        building: register('building'),
+        name: register('name', { required: 'name is required' }),
+        cpu: register('cpu', { required: 'cpu is required' }),
+        ram: register('ram', { required: 'ram is required' }),
+        ssd: register('ssd', { required: 'ssd is required' }),
+        hdd: register('hdd', { required: 'hdd is required' }),
+        room: register('room', { required: 'room is required' }),
+        building: register('building', { required: 'building is required' }),
     }
 
     type ComputerFormData = {
+        computer_id?: string;
+        user_id?: string;
         name: string;
         cpu: string;
         ram: string;
@@ -38,13 +41,20 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
     async function onSubmit(data: ComputerFormData) {
         alertService.clear();
         try {
-            // create or update computer based on computer prop
             let message;
             if (computer) {
-                await computerService.updateById(computer.id, data);
+                const {
+                    name, cpu, ram, ssd, hdd, room, building
+                } = data;
+
+                const cleanedData = {
+                    name, cpu, ram, ssd, hdd, room, building
+                };
+                console.log("Submitting data:", cleanedData);
+                await computerService.updateById(computer.computer_id, cleanedData, token);
                 message = 'Computer updated';
             } else {
-                await computerService.create(data);
+                await computerService.create(data, token);
                 message = 'Computer added';
             }
 
@@ -61,7 +71,7 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
         <form onSubmit={handleSubmit(onSubmit)}>
             <h1>{title}</h1>
             <div className="row">
-                 <div className="mb-3 col">
+                <div className="mb-3 col">
                     <label className="form-label">name</label>
                     <input {...fields.name} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.name?.message?.toString()}</div>

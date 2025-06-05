@@ -1,11 +1,15 @@
-import Alert from "@/app/_components/Alert";
+import Alert from "@/app/_components/alert";
 import { auth } from "@/app/_helpers/server/auth";
 import { redirect } from "next/navigation";
 
-export default function Layout({ children }: {children: React.ReactNode}) {
-    // if (auth.isAuthenticated()) {
-    //     redirect('/');
-    // }
+
+export default Layout;
+
+async function Layout({ children }: { children: React.ReactNode }) {
+    if (await auth.isAuthenticated()) {
+        redirect('/');
+    }
+
     return (
         <>
             <Alert />

@@ -2,16 +2,20 @@
 
 import { useEffect } from "react";
 import useUserService from "../_services/useUserService"
-import Spinner from "../_components/Spinner";
+import Spinner from "../_components/spinner";
 import Link from "next/link";
+import { useAuth } from "../_context/auth-context";
 
 export default function Home() {
+    const { token } = useAuth();
     const userService = useUserService();
     const user = userService.currentUser;
 
     useEffect(() => {
-        userService.getCurrent();
-    },[]);
+        if (token) {
+            userService.getCurrent(token);
+        }
+    }, []);
 
     if (user) {
         return (
