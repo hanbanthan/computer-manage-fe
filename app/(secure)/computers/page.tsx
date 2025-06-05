@@ -143,7 +143,7 @@ export default function Computers() {
                             <div style={{ display: 'flex' }}>
                                 🔎 <input
                                     type="text"
-                                    placeholder="Search Contacts"
+                                    placeholder="Search Computers"
                                     value={query}
                                     onChange={(event) => updateQuery(event.target.value)}
                                 />
