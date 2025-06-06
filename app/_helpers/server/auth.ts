@@ -3,7 +3,9 @@ import jwt from "jsonwebtoken";
 
 export const auth = {
     isAuthenticated,
-    verifyToken
+    verifyToken,
+    getRole,
+    hasRole,
 }
 
 async function verifyToken() {
@@ -13,6 +15,7 @@ async function verifyToken() {
     return id;
 }
 
+
 async function isAuthenticated() {
     try {
         await verifyToken();
@@ -20,4 +23,18 @@ async function isAuthenticated() {
     } catch {
         return false;
     }
+}
+
+async function getRole() {
+    const token = (await cookies()).get('authorization')?.value ?? '';
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    if (typeof decoded === 'object' && decoded !== null && 'role' in decoded) {
+        return (decoded as jwt.JwtPayload).role;
+    }
+    return undefined;
+}
+
+async function hasRole(allowedRoles: string[]) {
+    const role = await getRole();
+    return role !== null && allowedRoles.includes(role);
 }

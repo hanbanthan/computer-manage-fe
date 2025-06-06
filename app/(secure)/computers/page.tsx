@@ -65,7 +65,7 @@ export default function Computers() {
                         )
                     }
                     {
-                        showingComputers.map((computer: Computer) => {
+                        showingComputers.map((computer) => {
                             return (
                                 <tr key={computer.computer_id}>
                                     <td>{computer.name}</td>
@@ -103,7 +103,6 @@ export default function Computers() {
                 </>
             )
         }
-
         if (!computers) {
             return (
                 <tr>
@@ -125,36 +124,36 @@ export default function Computers() {
         }
     }
 
-    return (
-        <>
-            <h1>Computers</h1>
-            <Link href="/computers/add" className="btn btn-sm btn-success mb-2">Add Computer</Link>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th style={{ width: '13%' }}>name</th>
-                        <th style={{ width: '13%' }}>cpu</th>
-                        <th style={{ width: '13%' }}>ram</th>
-                        <th style={{ width: '13%' }}>ssd</th>
-                        <th style={{ width: '13%' }}>hdd</th>
-                        <th style={{ width: '13%' }}>room</th>
-                        <th style={{ width: '13%' }}>building</th>
-                        <th style={{ width: '9%' }}>
-                            <div style={{ display: 'flex' }}>
-                                🔎 <input
-                                    type="text"
-                                    placeholder="Search Computers"
-                                    value={query}
-                                    onChange={(event) => updateQuery(event.target.value)}
-                                />
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <TableBody />
-                </tbody>
-            </table>
-        </>
-    );
+return (
+    <>
+        <h1>Computers</h1>
+        <Link href="/computers/add" className="btn btn-sm btn-success mb-2">Add Computer</Link>
+        <table className="table table-striped">
+            <thead>
+                <tr>
+                    <th style={{ width: '13%' }}>name</th>
+                    <th style={{ width: '13%' }}>cpu</th>
+                    <th style={{ width: '13%' }}>ram</th>
+                    <th style={{ width: '13%' }}>ssd</th>
+                    <th style={{ width: '13%' }}>hdd</th>
+                    <th style={{ width: '13%' }}>room</th>
+                    <th style={{ width: '13%' }}>building</th>
+                    <th style={{ width: '9%' }}>
+                        <div style={{ display: 'flex' }}>
+                            🔎 <input
+                                type="text"
+                                placeholder="Search Computers"
+                                value={query}
+                                onChange={(event) => updateQuery(event.target.value)}
+                            />
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <TableBody />
+            </tbody>
+        </table>
+    </>
+);
 }

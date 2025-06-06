@@ -37,8 +37,6 @@ const computerStore = create<IComputerStore>(() => initialState);
 
 export default function useComputerService(): IComputerService {
     const alertService = useAlertService();
-    const router = useRouter();
-    const searchParams = useSearchParams();
     const { computer, computers } = computerStore();
 
     return {
@@ -112,7 +110,6 @@ export default function useComputerService(): IComputerService {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
-                    credentials: 'include',
                     body: JSON.stringify(computer),
                 });
 
@@ -163,7 +160,6 @@ export default function useComputerService(): IComputerService {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
-                    credentials: 'include',
                 });
 
                 if (!response.ok) {
