@@ -27,11 +27,20 @@ async function isAuthenticated() {
 
 async function getRole() {
     const token = (await cookies()).get('authorization')?.value ?? '';
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    if (typeof decoded === 'object' && decoded !== null && 'role' in decoded) {
-        return (decoded as jwt.JwtPayload).role;
+
+    if (!token || token.split('.').length !== 3) {
+        console.warn('Invalid or missing token in cookie');
+        throw new Error('Invalid token format');
     }
-    return undefined;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        if (typeof decoded === 'object' && decoded !== null && 'role' in decoded) {
+            return (decoded as jwt.JwtPayload).role;
+        }
+    } catch (error) {
+        throw error;
+    }
 }
 
 async function hasRole(allowedRoles: string[]) {

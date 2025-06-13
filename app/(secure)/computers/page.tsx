@@ -112,7 +112,8 @@ export default function Computers() {
     return (
         <>
             <h1>Computers</h1>
-            <Link href="/computers/add" className="btn btn-sm btn-success mb-2">Add Computer</Link>
+            {(currentUser?.role === 'admin' ||
+                currentUser?.role === 'superadmin') && (<Link href="/computers/add" className="btn btn-sm btn-success mb-2">Add Computer</Link>)}
             <table className="table table-striped">
                 <thead>
                     <tr>

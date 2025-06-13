@@ -24,12 +24,15 @@ export const AuthProvider = ({
     const [authToken, setAuthToken] = useState<string | null>(token);
 
     useEffect(() => {
+
         if (!token) {
+            console.log("No token → redirect");
             redirect('/account/login');
             return;
         }
 
         async function  validateToken() {
+            console.log("Checking token status...");
             try {
                 const response = await fetch(`${env.be.url}/api/auth/status`, {
                     method: 'GET',
@@ -40,28 +43,36 @@ export const AuthProvider = ({
                     credentials: 'include', 
                 });
 
+                 console.log("Status response:", response.status);
+
                 if (response.ok) {
+                    console.log("Access token is valid.");
                     setAuthToken(token);
                 } else if (response.status === 401) {
+                    console.log("Access token is invalid, trying refresh...");
                     const refreshResponse = await fetch(`${env.be.url}/api/auth/refresh`, {
-                        method: 'POST',
+                        method: 'GET',
                         credentials: 'include',
                     });
-
+                    
+                    console.log("Refresh response:", refreshResponse.status);
                     if (refreshResponse.ok) {
                         const data = await refreshResponse.json();
                         const newToken = data.accessToken;
-
+                        console.log("Refresh successful, new token:", newToken);
                         setAuthToken(newToken);
                     } else {
+                        console.log("Refresh failed.");
                         setAuthToken(null);
                         redirect('/account/login');
                     }
                 } else {
+                    console.log("Unexpected status from /status");
                     setAuthToken(null);
                     redirect('/account/login');
                 }
             } catch (error) {
+                 console.error("Token validation error:", error);
                 setAuthToken(null);
                 redirect('/account/login');
             }
@@ -77,3 +88,5 @@ export const AuthProvider = ({
         </AuthContext.Provider>
     );
 }
+
+

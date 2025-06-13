@@ -10,11 +10,11 @@ export default async function Layout({ children }: { children: React.ReactNode }
     const isAuthenticated = await auth.isAuthenticated();
     const cookieStore = cookies();
     const accessToken = (await cookieStore).get("authorization")?.value ?? null;
-    if (!isAuthenticated) {
-        const headersList = await headers();
-        const returnUrl = encodeURIComponent(headersList.get('x-invoke-path') || '/');
-        redirect(`/account/login?returnUrl=${returnUrl}`);
-    }
+    // if (!isAuthenticated) {
+    //     const headersList = await headers();
+    //     const returnUrl = encodeURIComponent(headersList.get('x-invoke-path') || '/');
+    //     redirect(`/account/login?returnUrl=${returnUrl}`);
+    // }
 
     return (
         <AuthProvider token={accessToken}>
