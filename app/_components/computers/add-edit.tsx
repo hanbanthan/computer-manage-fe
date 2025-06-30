@@ -23,7 +23,7 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
         ssd: register('ssd', { required: 'ssd is required' }),
         hdd: register('hdd', { required: 'hdd is required' }),
         room: register('room', { required: 'room is required' }),
-        building: register('building', { required: 'building is required' }),
+        note: register('note', { required: 'note is required' }),
     }
 
     type ComputerFormData = {
@@ -35,7 +35,7 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
         ssd: string;
         hdd: string;
         room: string;
-        building: string;
+        note: string;
     };
 
     async function onSubmit(data: ComputerFormData) {
@@ -44,11 +44,11 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
             let message;
             if (computer) {
                 const {
-                    name, cpu, ram, ssd, hdd, room, building
+                    name, cpu, ram, ssd, hdd, room, note
                 } = data;
 
                 const cleanedData = {
-                    name, cpu, ram, ssd, hdd, room, building
+                    name, cpu, ram, ssd, hdd, room, note
                 };
                 console.log("Submitting data:", cleanedData);
                 await computerService.updateById(computer.computer_id, cleanedData, token);
@@ -69,44 +69,67 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <h1>{title}</h1>
-            <div className="row">
-                <div className="mb-3 col">
-                    <label className="form-label">name</label>
+            <h1 className="mb-4">{title}</h1>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Name</label>
+                <div className="col-8">
                     <input {...fields.name} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.name?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">cpu</label>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Cpu</label>
+                <div className="col-8">
                     <input {...fields.cpu} type="text" className={`form-control ${errors.cpu ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.cpu?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">ram</label>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Ram</label>
+                <div className="col-8">
                     <input {...fields.ram} type="text" className={`form-control ${errors.ram ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.ram?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">ssd</label>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Ssd</label>
+                <div className="col-8">
                     <input {...fields.ssd} type="text" className={`form-control ${errors.ssd ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.ssd?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">hdd</label>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Hdd</label>
+                <div className="col-8">
                     <input {...fields.hdd} type="text" className={`form-control ${errors.hdd ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.hdd?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">room</label>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Room</label>
+                <div className="col-8">
                     <input {...fields.room} type="text" className={`form-control ${errors.room ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.room?.message?.toString()}</div>
                 </div>
-                <div className="mb-3 col">
-                    <label className="form-label">building</label>
-                    <input {...fields.building} type="text" className={`form-control ${errors.building ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.building?.message?.toString()}</div>
+            </div>
+
+            <div className="mb-3 row">
+                <label className="col-1 col-form-label" style={{ width: "60px" }}>Note</label>
+                <div className="col-8">
+                    <textarea {...fields.note} rows={7} className={`form-control ${errors.note ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.note?.message?.toString()}</div>
                 </div>
-                <div className="mb-3">
+            </div>
+
+            <div className="row mt-4">
+                <div className="col-1" style={{ width: "60px" }}></div>
+                <div className="col-8 d-flex justify-content-end gap-2">
                     <button type="submit" disabled={formState.isSubmitting} className="btn btn-primary me-2">
                         {formState.isSubmitting && <span className="spinner-border spinner-border-sm me-1"></span>}
                         Save

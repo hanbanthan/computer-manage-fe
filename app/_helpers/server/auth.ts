@@ -30,7 +30,7 @@ async function getRole() {
 
     if (!token || token.split('.').length !== 3) {
         console.warn('Invalid or missing token in cookie');
-        throw new Error('Invalid token format');
+        return null;
     }
 
     try {
@@ -39,6 +39,10 @@ async function getRole() {
             return (decoded as jwt.JwtPayload).role;
         }
     } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            console.warn('Token expired:', error.expiredAt);
+            return null; // or handle redirect
+        }
         throw error;
     }
 }

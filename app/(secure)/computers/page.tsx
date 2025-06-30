@@ -5,7 +5,7 @@ import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Computers() {
     const [query, SetQuery] = useState("");
@@ -59,7 +59,17 @@ export default function Computers() {
                                     <td>{computer.ssd}</td>
                                     <td>{computer.hdd}</td>
                                     <td>{computer.room}</td>
-                                    <td>{computer.building}</td>
+                                    <td
+                                        title={computer.note}
+                                        style={{
+                                            maxWidth: '200px',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        {computer.note}
+                                    </td>
                                     <td style={{ whiteSpace: 'nowrap' }}>
                                         {(
                                             currentUser?.role === 'admin' ||
@@ -68,8 +78,9 @@ export default function Computers() {
                                                     <Link
                                                         href={`/computers/edit/${computer.computer_id}`}
                                                         className="btn btn-sm btn-primary me-1"
+                                                        style={{ width: '60px' }}
                                                     >
-                                                        Edit
+                                                        Detail
                                                     </Link>
                                                     <button
                                                         onClick={() => computerService.deleteById(computer.computer_id, token)}
@@ -111,29 +122,36 @@ export default function Computers() {
 
     return (
         <>
-            <h1>Computers</h1>
-            {(currentUser?.role === 'admin' ||
-                currentUser?.role === 'superadmin') && (<Link href="/computers/add" className="btn btn-sm btn-success mb-2">Add Computer</Link>)}
-            <table className="table table-striped">
+            <h1 className="mb-3">Computers</h1>
+
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                {(currentUser?.role === 'admin' ||
+                    currentUser?.role === 'superadmin') && (
+                        <div>
+                            <Link href="/computers/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Computer</Link>
+                        </div>)}
+
+                <div className="input-group" style={{ maxWidth: '300px' }}>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="🔍 Search Computers"
+                        value={query}
+                        onChange={(event) => updateQuery(event.target.value)}
+                    />
+                </div>
+            </div>
+            <table className="table table-striped w-100" style={{ tableLayout: 'auto' }}>
                 <thead>
                     <tr>
-                        <th style={{ width: '13%' }}>name</th>
-                        <th style={{ width: '13%' }}>cpu</th>
-                        <th style={{ width: '13%' }}>ram</th>
-                        <th style={{ width: '13%' }}>ssd</th>
-                        <th style={{ width: '13%' }}>hdd</th>
-                        <th style={{ width: '13%' }}>room</th>
-                        <th style={{ width: '13%' }}>building</th>
-                        <th style={{ width: '9%' }}>
-                            <div style={{ display: 'flex' }}>
-                                🔎 <input
-                                    type="text"
-                                    placeholder="Search Computers"
-                                    value={query}
-                                    onChange={(event) => updateQuery(event.target.value)}
-                                />
-                            </div>
-                        </th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Name</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Cpu</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ram</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ssd</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Hdd</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Room</th>
+                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Note</th>
+                        <th style={{ width: '9%', backgroundColor: '#808080', color: 'white' }}></th>
                     </tr>
                 </thead>
                 <tbody>

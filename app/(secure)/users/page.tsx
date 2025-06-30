@@ -67,9 +67,9 @@ export default function Users() {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setActiveDropdownUserId(prev =>
-                                                    prev === user.user_id ? null : user.user_id
-                                                );
+                                                setActiveDropdownUserId(prev => {
+                                                    return prev === user.user_id ? null : user.user_id;
+                                                });
                                             }}
                                             className="btn btn-sm btn-primary"
                                             style={{ width: '100px' }}
@@ -111,15 +111,18 @@ export default function Users() {
 
     return (
         <>
-            <h1>Users</h1>
-            {currentUser?.role === 'superadmin' && <Link href="/users/add" className="btn btn-sm btn-success mb-2">Add Admin</Link>}
+            <h1 className="mb-3">Users</h1>
+
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                {currentUser?.role === 'superadmin' && <Link href="/users/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Admin</Link>}
+            </div>
+
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th style={{ width: '30%' }}>username</th>
-                        <th style={{ width: '30%' }}>role</th>
-                        <th style={{ width: '30%' }}>
-                        </th>
+                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Username</th>
+                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Role</th>
+                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}></th>
                     </tr>
                 </thead>
                 <tbody>

@@ -46,12 +46,12 @@ export default function AddAdmin({ title }: { title: string }) {
             <h1>{title}</h1>
             <div className="row">
                 <div className="mb-3 col">
-                    <label className="form-label">username</label>
+                    <label className="form-label">Username</label>
                     <input {...fields.username} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.name?.message?.toString()}</div>
                 </div>
                 <div className="mb-3 col">
-                    <label className="form-label">password</label>
+                    <label className="form-label">Password</label>
                     <input {...fields.password} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.name?.message?.toString()}</div>
                 </div>

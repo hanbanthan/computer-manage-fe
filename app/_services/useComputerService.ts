@@ -1,4 +1,3 @@
-import { useRouter, useSearchParams } from "next/navigation";
 import useAlertService from "./useAlertService"
 import { create } from "zustand";
 import { env } from "../_helpers/config";
@@ -12,7 +11,7 @@ interface IComputer {
     ssd: string,
     hdd: string,
     room: string,
-    building: string,
+    note: string,
 }
 
 interface IComputerStore {
