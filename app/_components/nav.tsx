@@ -7,6 +7,7 @@ import NavLink from "./nav-link";
 export default function Nav() {
     const [loggingOut, setLoggingOut] = useState<boolean>(false);
     const userService = useUserService();
+    const { currentUser } = useUserService();
 
     async function handleLogout() {
         setLoggingOut(true);
@@ -18,7 +19,9 @@ export default function Nav() {
             <div className="navbar-nav">
                 <NavLink href="/" exact className="nav-item nav-link">Home</NavLink>
                 <NavLink href="/computers" className="nav-item nav-link">Computers</NavLink>
-                <NavLink href="/users" className="nav-item nav-link">Users</NavLink>
+                {(currentUser?.role === 'admin' ||
+                    currentUser?.role === 'superadmin') && (
+                        <NavLink href="/users" className="nav-item nav-link">Users</NavLink>)}
                 <button onClick={handleLogout} className="btn btn-link nav-item nav-link" style={{ width: '67px' }} disabled={loggingOut}>
                     {
                         loggingOut
