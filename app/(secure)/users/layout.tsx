@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { auth } from "@/app/_helpers/server/auth";
 import { redirect } from "next/navigation";
 
