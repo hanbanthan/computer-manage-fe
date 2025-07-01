@@ -62,8 +62,7 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
                 const cleanedData = {
                     name, cpu, ram, ssd, hdd, room, note
                 };
-                console.log("Submitting data:", cleanedData);
-                await computerService.updateById(computer.computer_id, cleanedData, token);
+                if (computer.computer_id) await computerService.updateById(computer.computer_id, cleanedData, token);
                 message = 'Computer updated';
             } else {
                 await computerService.create(data, token);
