@@ -1,23 +1,18 @@
 'use client'
 
 import Spinner from "@/app/_components/spinner";
-import { useAuth } from "@/app/_context/auth-context";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Users() {
     const [activeDropdownUserId, setActiveDropdownUserId] = useState<string | null>(null);
-
-    const { token } = useAuth();
     const userService = useUserService();
     const users = userService.users;
     const currentUser = userService.currentUser;
 
     useEffect(() => {
-        if (token) {
-            userService.getAllUsers(token);
-        }
+            userService.getAllUsers();
     }, []);
 
 

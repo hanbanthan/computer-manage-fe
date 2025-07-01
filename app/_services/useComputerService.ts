@@ -1,4 +1,4 @@
-import useAlertService from "./useAlertService"
+import useAlertService from "./useAlertService";
 import { create } from "zustand";
 import { env } from "../_helpers/config";
 
@@ -20,17 +20,17 @@ interface IComputerStore {
 }
 
 interface IComputerService extends IComputerStore {
-    getAll: (token: string | null) => Promise<void>,
-    getById: (computer_id: string, token: string | null) => Promise<void>,
-    updateById: (computer_id: string, params: Partial<IComputer>, token: string | null) => Promise<void>,
-    create: (computer: IComputer, token: string | null) => Promise<void>,
-    deleteById: (computer_id: string, token: string | null) => Promise<void>,
+    getAll: () => Promise<void>,
+    getById: (computer_id: string) => Promise<void>,
+    updateById: (computer_id: string, params: Partial<IComputer>) => Promise<void>,
+    create: (computer: IComputer) => Promise<void>,
+    deleteById: (computer_id: string) => Promise<void>,
 }
 
 const initialState = {
     computer: undefined,
     computers: undefined,
-}
+};
 
 const computerStore = create<IComputerStore>(() => initialState);
 
@@ -41,137 +41,84 @@ export default function useComputerService(): IComputerService {
     return {
         computer,
         computers,
-        getAll: async (token: string | null) => {
+        getAll: async () => {
             try {
-                if (!token) {
-                    alertService.error("Token missing");
-                    return;
-                }
-
                 const response = await fetch(`${env.be.url}/api/computer/list/all`, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    },
                     credentials: 'include',
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch posts');
-                }
+                if (!response.ok) throw new Error('Failed to fetch computers');
 
                 const data = await response.json();
                 computerStore.setState({ computers: data.computers });
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
         },
-        getById: async (computer_id: string, token: string | null) => {
-            if (!token) {
-                alertService.error("Token missing");
-                return;
-            }
+        getById: async (computer_id: string) => {
             computerStore.setState({ computer: undefined });
             try {
                 const response = await fetch(`${env.be.url}/api/computer/${computer_id}`, {
                     method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json',
-                    },
                     credentials: 'include',
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch a post`);
-                }
+                if (!response.ok) throw new Error('Failed to fetch a computer');
 
                 const data = await response.json();
                 computerStore.setState({ computer: data.computer });
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
         },
-        create: async (computer: IComputer, token: string | null) => {
-            if (!token) {
-                alertService.error("Token missing");
-                return;
-            }
+        create: async (computer: IComputer) => {
             try {
                 const response = await fetch(`${env.be.url}/api/computer`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
+                    credentials: 'include',
                     body: JSON.stringify(computer),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to create a computer');
-                }
+                if (!response.ok) throw new Error('Failed to create a computer');
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
         },
-        updateById: async (computer_id, params, token: string | null) => {
-            if (!token) {
-                alertService.error("Token missing");
-                return;
-            }
+        updateById: async (computer_id, params) => {
             try {
                 const response = await fetch(`${env.be.url}/api/computer/${computer_id}`, {
                     method: 'PATCH',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                     credentials: 'include',
                     body: JSON.stringify(params),
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to update computer');
-                }
-
+                if (!response.ok) throw new Error('Failed to update computer');
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
         },
-        deleteById: async (computer_id: string, token: string | null) => {
-            if (!token) {
-                alertService.error("Token missing");
-                return;
-            }
+        deleteById: async (computer_id: string) => {
             try {
                 const response = await fetch(`${env.be.url}/api/computer/${computer_id}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
+                    credentials: 'include',
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to delete computer');
-                }
+                if (!response.ok) throw new Error('Failed to delete computer');
+
                 computerStore.setState({
-                    computers: computers?.filter(computer => computer.computer_id !== computer_id),
+                    computers: computers?.filter(c => c.computer_id !== computer_id),
                 });
             } catch (error) {
-                alertService.error(
-                    error instanceof Error ? error.message : String(error)
-                );
+                alertService.error(error instanceof Error ? error.message : String(error));
             }
-        }
-    }
+        },
+    };
 }

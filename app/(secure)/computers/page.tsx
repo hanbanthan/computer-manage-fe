@@ -1,7 +1,6 @@
 'use client';
 
 import Spinner from "@/app/_components/spinner";
-import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
@@ -9,7 +8,6 @@ import React, { useEffect, useState } from "react";
 
 export default function Computers() {
     const [query, SetQuery] = useState("");
-    const { token } = useAuth();
     const computerService = useComputerService();
     const computers = computerService.computers;
     const { currentUser } = useUserService();
@@ -23,9 +21,7 @@ export default function Computers() {
     }
 
     useEffect(() => {
-        if (token) {
-            computerService.getAll(token);
-        }
+        computerService.getAll();
     }, []);
 
     function TableBody() {
@@ -83,7 +79,7 @@ export default function Computers() {
                                                         Detail
                                                     </Link>
                                                     <button
-                                                        onClick={() => computer.computer_id && computerService.deleteById(computer.computer_id, token)}
+                                                        onClick={() => computer.computer_id && computerService.deleteById(computer.computer_id)}
                                                         className="btn btn-sm btn-danger btn-delete-user"
                                                         style={{ width: '60px' }}
                                                     >

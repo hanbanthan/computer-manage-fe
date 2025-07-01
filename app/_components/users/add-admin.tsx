@@ -1,6 +1,5 @@
 'use client'
 
-import { useAuth } from "@/app/_context/auth-context";
 import useAlertService from "@/app/_services/useAlertService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
@@ -8,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function AddAdmin({ title }: { title: string }) {
-    const { token } = useAuth();
     const router = useRouter();
     const alertService = useAlertService();
     const userService = useUserService();
@@ -31,7 +29,7 @@ export default function AddAdmin({ title }: { title: string }) {
         alertService.clear();
         try {
             const message = 'Admin added';
-            if(token) await userService.createNewAdmin(data.username, data.password, token);
+            await userService.createNewAdmin(data.username, data.password);
             router.push('/users');
             alertService.success(message, true);
         } catch (error) {

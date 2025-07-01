@@ -1,6 +1,5 @@
 'use client'
 
-import { useAuth } from "@/app/_context/auth-context";
 import useAlertService from "@/app/_services/useAlertService";
 import useComputerService from "@/app/_services/useComputerService";
 import Link from "next/link";
@@ -20,7 +19,6 @@ interface IComputer {
 }
 
 export default function AddEdit({ title, computer }: { title: string, computer?: IComputer }) {
-    const { token } = useAuth();
     const router = useRouter();
     const alertService = useAlertService();
     const computerService = useComputerService();
@@ -62,10 +60,10 @@ export default function AddEdit({ title, computer }: { title: string, computer?:
                 const cleanedData = {
                     name, cpu, ram, ssd, hdd, room, note
                 };
-                if (computer.computer_id) await computerService.updateById(computer.computer_id, cleanedData, token);
+                if (computer.computer_id) await computerService.updateById(computer.computer_id, cleanedData);
                 message = 'Computer updated';
             } else {
-                await computerService.create(data, token);
+                await computerService.create(data);
                 message = 'Computer added';
             }
 

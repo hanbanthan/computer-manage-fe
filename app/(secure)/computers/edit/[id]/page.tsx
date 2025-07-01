@@ -2,14 +2,12 @@
 
 import AddEdit from "@/app/_components/computers/add-edit";
 import Spinner from "@/app/_components/spinner";
-import { useAuth } from "@/app/_context/auth-context";
 import useComputerService from "@/app/_services/useComputerService";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Edit() {
     const { id } = useParams();;
-    const { token } = useAuth();
     const router = useRouter();
     const computerService = useComputerService();
     const computer = computerService.computer;
@@ -18,7 +16,7 @@ export default function Edit() {
     useEffect(() => {
         if (!id) return;
         const computerId = Array.isArray(id) ? id[0] : id;
-        computerService.getById(computerId, token);
+        computerService.getById(computerId);
     },[router]);
 
     return computer
