@@ -79,7 +79,7 @@ export default function Users() {
                                             <div className="dropdown-menu show position-absolute mt-1">
                                                 <button
                                                     onClick={() => {
-                                                        if (user.user_id) {
+                                                        if (user.user_id&&token) {
                                                             userService.changeRole(user.user_id, 'admin', token);
                                                             setActiveDropdownUserId(null);
                                                         }
