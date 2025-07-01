@@ -39,10 +39,17 @@ async function getRole() {
             return (decoded as jwt.JwtPayload).role;
         }
     } catch (error) {
-        if (error.name === 'TokenExpiredError') {
+        if (error instanceof jwt.TokenExpiredError) {
             console.warn('Token expired:', error.expiredAt);
-            return null; // or handle redirect
+            return null;
         }
+
+        // For other JWT errors
+        if (error instanceof jwt.JsonWebTokenError) {
+            console.warn('JWT error:', error.message);
+            return null;
+        }
+
         throw error;
     }
 }
