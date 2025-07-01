@@ -15,27 +15,19 @@ const AuthContext = createContext<AuthContextType>({ token: null });
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({
-    token, 
     children,
 }: {
-    token: string | null;
     children: React.ReactNode;
 }) => {
-    const [authToken, setAuthToken] = useState<string | null>(token);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
-        if (!token) {
-            redirect('/account/login');
-            return;
-        }
-
-        async function  validateToken() {
+        async function  validateSession() {
             try {
                 const response = await fetch(`${env.be.url}/api/auth/status`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json',
                     },
                     credentials: 'include', 
@@ -44,7 +36,7 @@ export const AuthProvider = ({
                  console.log("Status response:", response.status);
 
                 if (response.ok) {
-                    setAuthToken(token);
+                    setIsAuthenticated(true);
                 } else if (response.status === 401) {
                     const refreshResponse = await fetch(`${env.be.url}/api/auth/refresh`, {
                         method: 'GET',
@@ -52,29 +44,28 @@ export const AuthProvider = ({
                     });
                     
                     if (refreshResponse.ok) {
-                        const data = await refreshResponse.json();
-                        const newToken = data.accessToken;
-                        setAuthToken(newToken);
+                        setIsAuthenticated(true);
                     } else {
-                        setAuthToken(null);
+                        setIsAuthenticated(false);
                         redirect('/account/login');
                     }
                 } else {
-                    setAuthToken(null);
+                    setIsAuthenticated(false);
                     redirect('/account/login');
                 }
             } catch {
-                setAuthToken(null);
                 redirect('/account/login');
+            } finally {
+                setLoading(false);
             }
         }
-        validateToken();
-    }, [token]);
+        validateSession();
+    }, []);
 
-    if (!authToken) return null;
+    if (loading) return null;
     
     return (
-        <AuthContext.Provider value={{ token: authToken }}>
+        <AuthContext.Provider value={{ isAuthenticated }}>
             {children}
         </AuthContext.Provider>
     );
