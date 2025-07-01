@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import useAlertService from "./useAlertService";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { env } from "@/app/_helpers/config";
 
 interface IUser {
@@ -39,7 +38,6 @@ const userStore = create<IUserStore>(() => initialState);
 export default function useUserService(): IUserService {
     const alertService = useAlertService();
     const router = useRouter();
-    const searchParams = useSearchParams();
     const { user, users, currentUser } = userStore();
 
     return {
