@@ -14,7 +14,12 @@ export default function AddAdmin({ title }: { title: string }) {
     const userService = useUserService();
 
 
-    const { register, handleSubmit, reset, formState } = useForm();
+    type UserFormData = {
+        username: string,
+        password: string,
+    }
+
+    const { register, handleSubmit, reset, formState } = useForm<UserFormData>();
     const { errors } = formState;
 
     const fields = {
@@ -22,16 +27,11 @@ export default function AddAdmin({ title }: { title: string }) {
         password: register('password', { required: 'password is required' }),
     }
 
-    type UserFormData = {
-        username: string,
-        password: string,
-    }
-
     async function onSubmit(data: UserFormData) {
         alertService.clear();
         try {
             const message = 'Admin added';
-            await userService.createNewAdmin(data.username, data.password, token);
+            if(token) await userService.createNewAdmin(data.username, data.password, token);
             router.push('/users');
             alertService.success(message, true);
         } catch (error) {
