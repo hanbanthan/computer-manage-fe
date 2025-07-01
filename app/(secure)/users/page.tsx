@@ -67,9 +67,7 @@ export default function Users() {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setActiveDropdownUserId(prev => {
-                                                    return prev === user.user_id ? null : user.user_id;
-                                                });
+                                                setActiveDropdownUserId(prev => (prev === user.user_id ? null : (user.user_id ?? null)));
                                             }}
                                             className="btn btn-sm btn-primary"
                                             style={{ width: '100px' }}
