@@ -63,7 +63,7 @@ export const AuthProvider = ({
                     setAuthToken(null);
                     redirect('/account/login');
                 }
-            } catch (error) {
+            } catch {
                 setAuthToken(null);
                 redirect('/account/login');
             }

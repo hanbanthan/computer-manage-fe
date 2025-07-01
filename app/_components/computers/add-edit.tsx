@@ -7,7 +7,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form";
 
-export default function AddEdit({ title, computer }: { title: string, computer?: any }) {
+interface IComputer {
+    computer_id?: string,
+    user_id?: string,
+    name: string,
+    cpu: string,
+    ram: string,
+    ssd: string,
+    hdd: string,
+    room: string,
+    note: string,
+}
+
+export default function AddEdit({ title, computer }: { title: string, computer?: IComputer }) {
     const { token } = useAuth();
     const router = useRouter();
     const alertService = useAlertService();
