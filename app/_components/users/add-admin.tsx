@@ -47,13 +47,13 @@ export default function AddAdmin({ title }: { title: string }) {
             <div className="row">
                 <div className="mb-3 col">
                     <label className="form-label">Username</label>
-                    <input {...fields.username} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.name?.message?.toString()}</div>
+                    <input {...fields.username} type="text" className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.username?.message?.toString()}</div>
                 </div>
                 <div className="mb-3 col">
                     <label className="form-label">Password</label>
-                    <input {...fields.password} type="text" className={`form-control ${errors.name ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.name?.message?.toString()}</div>
+                    <input {...fields.password} type="text" className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.password?.message?.toString()}</div>
                 </div>
                 <div className="mb-3">
                     <button type="submit" disabled={formState.isSubmitting} className="btn btn-primary me-2">
