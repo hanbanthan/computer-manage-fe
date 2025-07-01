@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useForm } from "react-hook-form";
 import useUserService from '@/app/_services/useUserService';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 interface LoginFormData {
     username: string;
@@ -19,8 +20,14 @@ export default function Login() {
         password: register('password', { required: 'Password is required' })
     }
 
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const returnUrl = searchParams.get('returnUrl') || '/';
+
     async function onSubmit({ username, password }: LoginFormData) {
         await userService.login(username, password);
+        router.push(returnUrl);
     }
 
     return (

@@ -61,7 +61,6 @@ export default function useUserService(): IUserService {
                 //set current user
                 const data = await response.json();
                 userStore.setState({ ...initialState, currentUser: data.user });
-                router.push('/');
 
             } catch (error) {
                 alertService.error(error instanceof Error ? error.message : String(error));
