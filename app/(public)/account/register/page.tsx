@@ -11,7 +11,7 @@ interface RegisterFormData {
 export default function Register() {
      const userService = useUserService();
 
-    const { register, handleSubmit, formState } = useForm<User>();
+    const { register, handleSubmit, formState } = useForm<RegisterFormData>();
     const { errors } = formState;
 
     const fields = {
