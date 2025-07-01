@@ -83,7 +83,7 @@ export default function Computers() {
                                                         Detail
                                                     </Link>
                                                     <button
-                                                        onClick={() => computerService.deleteById(computer.computer_id, token)}
+                                                        onClick={() => computer.computer_id && computerService.deleteById(computer.computer_id, token)}
                                                         className="btn btn-sm btn-danger btn-delete-user"
                                                         style={{ width: '60px' }}
                                                     >
