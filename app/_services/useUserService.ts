@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import useAlertService from "./useAlertService";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { env } from "@/app/_helpers/config";
 
 interface IUser {
@@ -38,7 +38,6 @@ const userStore = create<IUserStore>(() => initialState);
 export default function useUserService(): IUserService {
     const alertService = useAlertService();
     const router = useRouter();
-    const searchParams = useSearchParams();
     const { user, users, currentUser } = userStore();
 
     return {
@@ -62,10 +61,7 @@ export default function useUserService(): IUserService {
                 //set current user
                 const data = await response.json();
                 userStore.setState({ ...initialState, currentUser: data.user });
-
-                // login successful, cookies should be set by server (httpOnly cookies)
-                const returnUrl = searchParams.get('returnUrl') || '/';
-                router.push(returnUrl);
+                router.push('/');
 
             } catch (error) {
                 alertService.error(error instanceof Error ? error.message : String(error));

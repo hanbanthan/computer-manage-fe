@@ -9,7 +9,7 @@ interface LoginFormData {
 }
 
 export default function Login() {
-     const userService = useUserService();
+    const userService = useUserService();
 
     const { register, handleSubmit, formState } = useForm<LoginFormData>();
     const { errors } = formState;
@@ -20,7 +20,7 @@ export default function Login() {
     }
 
     async function onSubmit({ username, password }: LoginFormData) {
-         await userService.login(username, password);
+        await userService.login(username, password);
     }
 
     return (
