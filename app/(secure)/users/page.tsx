@@ -90,7 +90,7 @@ export default function Users() {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        if (user.user_id) {
+                                                        if (user.user_id&&token) {
                                                             userService.changeRole(user.user_id, 'user', token);
                                                             setActiveDropdownUserId(null);
                                                         }
