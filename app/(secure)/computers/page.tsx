@@ -14,7 +14,7 @@ export default function Computers() {
     const computers = computerService.computers;
     const { currentUser } = useUserService();
 
-    const updateQuery = (query) => {
+    const updateQuery = (query: string) => {
         SetQuery(query.trim());
     }
 
