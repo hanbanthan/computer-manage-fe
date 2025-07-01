@@ -10,6 +10,7 @@ export const auth = {
 
 async function verifyToken() {
     const token = (await cookies()).get('authorization')?.value ?? '';
+    console.log("Auth cookie token:", token);
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
     const id = decoded.sub as string;
     return id;
@@ -35,6 +36,7 @@ async function getRole() {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+        console.log("Decoded token:", decoded); 
         if (typeof decoded === 'object' && decoded !== null && 'role' in decoded) {
             return (decoded as jwt.JwtPayload).role;
         }

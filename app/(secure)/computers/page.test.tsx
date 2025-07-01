@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { useAuth } from '@/app/_context/auth-context';
 import useUserService from '@/app/_services/useUserService';
 import useComputerService from '@/app/_services/useComputerService';
-import Computers from '../computers/page';
+import Computers from './page';
 
 jest.mock('@/app/_context/auth-context');
 jest.mock('@/app/_services/useComputerService');

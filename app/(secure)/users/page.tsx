@@ -15,8 +15,6 @@ export default function Users() {
             userService.getAllUsers();
     }, []);
 
-
-
     function TableBody() {
         if (!users) {
             return (
