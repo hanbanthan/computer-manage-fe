@@ -16,8 +16,9 @@ export default function Edit() {
 
     
     useEffect(() => {
-        if (!id ) return;
-        computerService.getById(id, token);
+        if (!id) return;
+        const computerId = Array.isArray(id) ? id[0] : id;
+        computerService.getById(computerId, token);
     },[router]);
 
     return computer
