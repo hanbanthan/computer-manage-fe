@@ -48,7 +48,7 @@ export default function Users() {
                             {(user.role === 'user' ||
                                 (user.role === 'admin' && currentUser?.role === 'superadmin')) && (
                                     <button
-                                        onClick={() => token && user.user_id && userService.deleteUser(user.user_id, token)}
+                                        onClick={() => user.user_id && userService.deleteUser(user.user_id)}
                                         className="btn btn-sm btn-danger me-2"
                                         style={{ width: '100px' }}
                                     >
@@ -74,8 +74,8 @@ export default function Users() {
                                             <div className="dropdown-menu show position-absolute mt-1">
                                                 <button
                                                     onClick={() => {
-                                                        if (user.user_id&&token) {
-                                                            userService.changeRole(user.user_id, 'admin', token);
+                                                        if (user.user_id) {
+                                                            userService.changeRole(user.user_id, 'admin');
                                                             setActiveDropdownUserId(null);
                                                         }
                                                     }}
@@ -85,8 +85,8 @@ export default function Users() {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        if (user.user_id&&token) {
-                                                            userService.changeRole(user.user_id, 'user', token);
+                                                        if (user.user_id) {
+                                                            userService.changeRole(user.user_id, 'user');
                                                             setActiveDropdownUserId(null);
                                                         }
                                                     }}
