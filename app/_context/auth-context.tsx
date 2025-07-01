@@ -7,10 +7,10 @@ import { env } from "../_helpers/config";
 
 
 interface AuthContextType {
-    token: string | null;
+    isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({ token: null });
+const AuthContext = createContext<AuthContextType>({ isAuthenticated: false });
 
 export const useAuth = () => useContext(AuthContext);
 
