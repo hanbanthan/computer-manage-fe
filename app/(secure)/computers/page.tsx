@@ -137,7 +137,7 @@ export default function Computers() {
                         </div>)}
                 <div className="d-flex align-items-center ms-auto gap-2">
                     <div className="d-flex align-items-center">
-                        <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0">
+                        <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0"  style={{ whiteSpace: 'nowrap' }}>
                             Sort by:
                         </label>
 
