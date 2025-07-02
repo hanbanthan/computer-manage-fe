@@ -1,19 +1,35 @@
 'use client'
 
 import Spinner from "@/app/_components/spinner";
+import { useAuth } from "@/app/_context/auth-context";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Users() {
     const [activeDropdownUserId, setActiveDropdownUserId] = useState<string | null>(null);
     const userService = useUserService();
+    const router = useRouter();
+    const { isAuthenticated, user: authUser } = useAuth();
+
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        if (authUser?.role !== 'admin' && authUser?.role !== 'superadmin') {
+            router.replace('/');
+        }
+    }, [isAuthenticated, authUser, router]);
+
+    useEffect(() => {
+        userService.getAllUsers();
+    }, [userService]);
+    
+    if (!isAuthenticated || !authUser) return <Spinner />;
+    
     const users = userService.users;
     const currentUser = userService.currentUser;
 
-    useEffect(() => {
-            userService.getAllUsers();
-    }, []);
+
 
     function TableBody() {
         if (!users) {

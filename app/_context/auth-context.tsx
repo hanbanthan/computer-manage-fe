@@ -1,13 +1,20 @@
 'use client';
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { createContext, useContext } from "react";
 import { env } from "../_helpers/config";
 
+interface User {
+    user_id: string;
+    username: string;
+    role: string;
+
+}
 
 interface AuthContextType {
     isAuthenticated: boolean;
+    user: User | null;
 }
 
 const AuthContext = createContext<AuthContextType>({ isAuthenticated: false });
@@ -21,51 +28,66 @@ export const AuthProvider = ({
 }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
-        async function  validateSession() {
+        async function validateSession() {
             try {
                 const response = await fetch(`${env.be.url}/api/auth/status`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
                     },
-                    credentials: 'include', 
+                    credentials: 'include',
                 });
 
-                 console.log("Status response:", response.status);
-
                 if (response.ok) {
+                    const data = await response.json();
+                    setUser(data.user);
                     setIsAuthenticated(true);
-                } else if (response.status === 401) {
+                }
+
+                if (response.status === 401) {
                     const refreshResponse = await fetch(`${env.be.url}/api/auth/refresh`, {
                         method: 'GET',
                         credentials: 'include',
                     });
-                    
+
                     if (refreshResponse.ok) {
-                        setIsAuthenticated(true);
-                    } else {
-                        setIsAuthenticated(false);
-                        redirect('/account/login');
+                        const userResponse = await fetch(`${env.be.url}/api/auth/status`, {
+                            method: 'GET',
+                            credentials: 'include',
+                            headers: { 'Accept': 'application/json' },
+                        });
+
+                        if (userResponse.ok) {
+                            const userData = await userResponse.json();
+                            setUser(userData.user);
+                            setIsAuthenticated(true);
+                            return;
+                        }
                     }
-                } else {
+
+                    setUser(null);
                     setIsAuthenticated(false);
-                    redirect('/account/login');
+                    router.replace('/account/login');
                 }
             } catch {
-                redirect('/account/login');
+                setUser(null);
+                setIsAuthenticated(false);
+                router.replace('/account/login');
             } finally {
                 setLoading(false);
             }
         }
         validateSession();
-    }, []);
+    }, [router]);
 
     if (loading) return null;
-    
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated }}>
+        <AuthContext.Provider value={{ isAuthenticated, user }}>
             {children}
         </AuthContext.Provider>
     );
