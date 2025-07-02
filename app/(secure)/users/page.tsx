@@ -11,14 +11,15 @@ export default function Users() {
     const [activeDropdownUserId, setActiveDropdownUserId] = useState<string | null>(null);
     const userService = useUserService();
     const router = useRouter();
-    const { isAuthenticated, user: authUser } = useAuth();
+    const { isAuthenticated, user: authUser, loading } = useAuth();
 
     useEffect(() => {
+        if (loading) return;
         if (!isAuthenticated) return;
         if (authUser?.role !== 'admin' && authUser?.role !== 'superadmin') {
             router.replace('/');
         }
-    }, [isAuthenticated, authUser, router]);
+    }, [isAuthenticated, authUser, router, loading]);
 
     useEffect(() => {
         userService.getAllUsers();

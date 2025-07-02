@@ -15,11 +15,13 @@ interface User {
 interface AuthContextType {
     isAuthenticated: boolean;
     user: User | null;
+    loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
     isAuthenticated: false,
-    user: null
+    user: null,
+    loading: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -90,7 +92,7 @@ export const AuthProvider = ({
     if (loading) return null;
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, loading }}>
             {children}
         </AuthContext.Provider>
     );
