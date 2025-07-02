@@ -22,7 +22,7 @@ export default function Computers() {
     }
 
     useEffect(() => {
-         const sortOrder = sortMode === "newest" ? "DESC" : "ASC";
+        const sortOrder = sortMode === "newest" ? "DESC" : "ASC";
         computerService.getAll(sortOrder);
     }, [sortMode]);
 
@@ -31,7 +31,7 @@ export default function Computers() {
             if (newSortMode !== sortMode) {
                 setSortMode(newSortMode);
             }
-    },[sortMode]);
+        }, [sortMode]);
 
     function TableBody() {
         if (computers?.length) {
@@ -135,33 +135,34 @@ export default function Computers() {
                         <div>
                             <Link href="/computers/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Computer</Link>
                         </div>)}
-                <div className="flex justify-end items-center mb-4">
-                    <label htmlFor="sort-select" className="text-sm text-gray-600 mr-2">
-                        Sort by:
-                    </label>
-                    
-                    <select
-                        id="sort-select"
-                        value={sortMode}
-                        onChange={(e) => 
-                            handleSortChange(e.target.value as "newest" | "oldest")
-                        }
-                        className="bg-white border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-pink-500 focus:border-pink-500 shadow-sm disabled:opacity-70"
-                    >
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>        
-                    </select>
+                <div className="d-flex align-items-center ms-auto gap-2">
+                    <div className="d-flex align-items-center">
+                        <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0">
+                            Sort by:
+                        </label>
 
-                </div>
+                        <select
+                            id="sort-select"
+                            value={sortMode}
+                            onChange={(e) =>
+                                handleSortChange(e.target.value as "newest" | "oldest")
+                            }
+                            className="bg-white border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-pink-500 focus:border-pink-500 shadow-sm disabled:opacity-70"
+                        >
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                        </select>
+                    </div>
 
-                <div className="input-group ms-auto" style={{ maxWidth: '300px' }}>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="🔍 Search Computers"
-                        value={query}
-                        onChange={(event) => updateQuery(event.target.value)}
-                    />
+                    <div className="input-group" style={{ maxWidth: '300px' }}>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="🔍 Search Computers"
+                            value={query}
+                            onChange={(event) => updateQuery(event.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
             <table className="table table-striped w-100" style={{ tableLayout: 'auto' }}>
