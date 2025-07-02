@@ -4,10 +4,11 @@ import Spinner from "@/app/_components/spinner";
 import useComputerService from "@/app/_services/useComputerService";
 import useUserService from "@/app/_services/useUserService";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function Computers() {
     const [query, SetQuery] = useState("");
+    const [sortMode, setSortMode] = useState<"newest" | "oldest">("newest");
     const computerService = useComputerService();
     const computers = computerService.computers;
     const { currentUser } = useUserService();
@@ -21,8 +22,16 @@ export default function Computers() {
     }
 
     useEffect(() => {
-        computerService.getAll();
-    }, []);
+         const sortOrder = sortMode === "newest" ? "DESC" : "ASC";
+        computerService.getAll(sortOrder);
+    }, [sortMode]);
+
+    const handleSortChange = useCallback(
+        (newSortMode: "newest" | "oldest") => {
+            if (newSortMode !== sortMode) {
+                setSortMode(newSortMode);
+            }
+    },[sortMode]);
 
     function TableBody() {
         if (computers?.length) {
@@ -126,6 +135,24 @@ export default function Computers() {
                         <div>
                             <Link href="/computers/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Computer</Link>
                         </div>)}
+                <div className="flex justify-end items-center mb-4">
+                    <label htmlFor="sort-select" className="text-sm text-gray-600 mr-2">
+                        Sort by:
+                    </label>
+                    
+                    <select
+                        id="sort-select"
+                        value={sortMode}
+                        onChange={(e) => 
+                            handleSortChange(e.target.value as "newest" | "oldest")
+                        }
+                        className="bg-white border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-pink-500 focus:border-pink-500 shadow-sm disabled:opacity-70"
+                    >
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>        
+                    </select>
+
+                </div>
 
                 <div className="input-group ms-auto" style={{ maxWidth: '300px' }}>
                     <input

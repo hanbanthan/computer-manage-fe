@@ -20,7 +20,7 @@ interface IComputerStore {
 }
 
 interface IComputerService extends IComputerStore {
-    getAll: () => Promise<void>,
+    getAll: (order: string) => Promise<void>,
     getById: (computer_id: string) => Promise<void>,
     updateById: (computer_id: string, params: Partial<IComputer>) => Promise<void>,
     create: (computer: IComputer) => Promise<void>,
@@ -41,9 +41,9 @@ export default function useComputerService(): IComputerService {
     return {
         computer,
         computers,
-        getAll: async () => {
+        getAll: async (order: string = "DECS") => {
             try {
-                const response = await fetch(`${env.be.url}/api/computer/list/all`, {
+                const response = await fetch(`${env.be.url}/api/computer/list/all?order=${order}`, {
                     method: 'GET',
                     credentials: 'include',
                 });
