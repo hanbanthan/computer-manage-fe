@@ -120,14 +120,14 @@ export default function Computers() {
         <>
             <h1 className="mb-3">Computers</h1>
 
-            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="d-flex align-items-center mb-3">
                 {(currentUser?.role === 'admin' ||
                     currentUser?.role === 'superadmin') && (
                         <div>
                             <Link href="/computers/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Computer</Link>
                         </div>)}
 
-                <div className="input-group" style={{ maxWidth: '300px' }}>
+                <div className="input-group ms-auto" style={{ maxWidth: '300px' }}>
                     <input
                         type="text"
                         className="form-control"
