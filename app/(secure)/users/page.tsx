@@ -22,10 +22,10 @@ export default function Users() {
 
     useEffect(() => {
         userService.getAllUsers();
-    }, [userService]);
-    
+    }, []);
+
     if (!isAuthenticated || !authUser) return <Spinner />;
-    
+
     const users = userService.users;
     const currentUser = userService.currentUser;
 
@@ -59,16 +59,6 @@ export default function Users() {
                         <td>{user.username}</td>
                         <td>{user.role}</td>
                         <td style={{ whiteSpace: 'nowrap' }}>
-                            {(user.role === 'user' ||
-                                (user.role === 'admin' && currentUser?.role === 'superadmin')) && (
-                                    <button
-                                        onClick={() => user.user_id && userService.deleteUser(user.user_id)}
-                                        className="btn btn-sm btn-danger me-2"
-                                        style={{ width: '100px' }}
-                                    >
-                                        Delete
-                                    </button>
-                                )}
 
                             {(user.role === 'user' || user.role === 'admin') &&
                                 currentUser?.role === 'superadmin' && (
@@ -85,7 +75,9 @@ export default function Users() {
                                         </button>
 
                                         {activeDropdownUserId === user.user_id && (
-                                            <div className="dropdown-menu show position-absolute mt-1">
+                                            <div 
+                                                className="dropdown-menu show position-absolute mt-1" 
+                                            >
                                                 <button
                                                     onClick={() => {
                                                         if (user.user_id) {
@@ -111,6 +103,17 @@ export default function Users() {
                                             </div>
                                         )}
                                     </div>
+                                )}
+
+                            {(user.role === 'user' ||
+                                (user.role === 'admin' && currentUser?.role === 'superadmin')) && (
+                                    <button
+                                        onClick={() => user.user_id && userService.deleteUser(user.user_id)}
+                                        className="btn btn-sm btn-danger me-2"
+                                        style={{ width: '100px' }}
+                                    >
+                                        Delete
+                                    </button>
                                 )}
                         </td>
                     </tr>
