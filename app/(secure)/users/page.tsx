@@ -70,7 +70,7 @@ export default function Users() {
                                                 setActiveDropdownUserId(prev => (prev === user.user_id ? null : (user.user_id ?? null)));
                                             }}
                                             className="btn btn-sm btn-primary me-1"
-                                            style={{ width: '60px' }}
+                                            style={{ width: '100px' }}
                                         >
                                             Change role
                                         </button>
@@ -111,7 +111,7 @@ export default function Users() {
                                     <button
                                         onClick={() => user.user_id && userService.deleteUser(user.user_id)}
                                         className="btn btn-sm btn-danger btn-delete-user"
-                                        style={{ width: '60px' }}
+                                        style={{ width: '100px' }}
                                     >
                                         Delete
                                     </button>
