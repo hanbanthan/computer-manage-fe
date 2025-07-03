@@ -7,7 +7,9 @@ import NavLink from "./nav-link";
 export default function Nav() {
     const [loggingOut, setLoggingOut] = useState<boolean>(false);
     const userService = useUserService();
-    const { currentUser } = useUserService();
+    const { currentUser } = userService;
+
+    if (!currentUser) return null;
 
     async function handleLogout() {
         setLoggingOut(true);
