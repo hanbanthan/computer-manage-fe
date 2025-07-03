@@ -137,7 +137,7 @@ export default function Computers() {
                         </div>)}
                 <div className="d-flex align-items-center ms-auto gap-2">
                     <div className="d-flex align-items-center">
-                        <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0"  style={{ whiteSpace: 'nowrap' }}>
+                        <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0" style={{ whiteSpace: 'nowrap' }}>
                             Sort by:
                         </label>
 
@@ -165,23 +165,25 @@ export default function Computers() {
                     </div>
                 </div>
             </div>
-            <table className="table table-striped w-100" style={{ tableLayout: 'auto' }}>
-                <thead>
-                    <tr>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Name</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Cpu</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ram</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ssd</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Hdd</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Room</th>
-                        <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Note</th>
-                        <th style={{ width: '9%', backgroundColor: '#808080', color: 'white' }}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <TableBody />
-                </tbody>
-            </table>
+            <div className="table-responsive">
+                <table className="table table-striped w-100" style={{ tableLayout: 'auto' }}>
+                    <thead>
+                        <tr>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Name</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Cpu</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ram</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Ssd</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Hdd</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Room</th>
+                            <th style={{ width: '13%', backgroundColor: '#808080', color: 'white' }}>Note</th>
+                            <th style={{ width: '9%', backgroundColor: '#808080', color: 'white' }}></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <TableBody />
+                    </tbody>
+                </table>
+            </div>
         </>
     );
 }
