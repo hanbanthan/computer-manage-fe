@@ -40,7 +40,7 @@ export default function Register() {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Password</label>
-                        <input {...fields.password} type="text" className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+                        <input {...fields.password} type="password" className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
                         <div className="invalid-feedback">{errors.password?.message?.toString()}</div>
                     </div>
                     <button disabled={formState.isSubmitting} className="btn btn-primary">

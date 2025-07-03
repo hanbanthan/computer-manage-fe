@@ -6,6 +6,7 @@ import NavLink from "./nav-link";
 
 export default function Nav() {
     const [loggingOut, setLoggingOut] = useState<boolean>(false);
+    const [collapsed, setCollapsed] = useState(true);
     const userService = useUserService();
     const { currentUser } = useUserService();
 
@@ -14,9 +15,24 @@ export default function Nav() {
         await userService.logout();
     }
 
+    function toggleNavbar() {
+        setCollapsed(!collapsed);
+    }
+
     return (
-        <nav className="navbar navbar-expand navbar-dark bg-dark px-3">
-            <div className="navbar-nav">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+            <button
+                className="navbar-toggle"
+                type="button"
+                aria-controls="navbarNav"
+                aria-expanded={!collapsed}
+                aria-label="Toggle navigation"
+                onClick={toggleNavbar}
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+
+            <div className={`collapse navbar-collapse ${!collapsed ? 'show' : ''}`} id="navbarNav">
                 <NavLink href="/" exact className="nav-item nav-link">Home</NavLink>
                 <NavLink href="/computers" className="nav-item nav-link">Computers</NavLink>
                 {(currentUser?.role === 'admin' ||

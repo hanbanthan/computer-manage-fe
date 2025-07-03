@@ -69,8 +69,8 @@ export default function Users() {
                                                 e.stopPropagation();
                                                 setActiveDropdownUserId(prev => (prev === user.user_id ? null : (user.user_id ?? null)));
                                             }}
-                                            className="btn btn-sm btn-primary"
-                                            style={{ width: '100px' }}
+                                            className="btn btn-sm btn-primary me-1"
+                                            style={{ width: '60px' }}
                                         >
                                             Change role
                                         </button>
@@ -110,8 +110,8 @@ export default function Users() {
                                 (user.role === 'admin' && currentUser?.role === 'superadmin')) && (
                                     <button
                                         onClick={() => user.user_id && userService.deleteUser(user.user_id)}
-                                        className="btn btn-sm btn-danger me-2"
-                                        style={{ width: '100px' }}
+                                        className="btn btn-sm btn-danger btn-delete-user"
+                                        style={{ width: '60px' }}
                                     >
                                         Delete
                                     </button>
