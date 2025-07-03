@@ -22,7 +22,7 @@ export default function Nav() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
             <button
-                className="navbar-toggle"
+                className="navbar-toggler"
                 type="button"
                 aria-controls="navbarNav"
                 aria-expanded={!collapsed}
@@ -41,7 +41,7 @@ export default function Nav() {
                 <button onClick={handleLogout} className="btn btn-link nav-item nav-link" style={{ width: '67px' }} disabled={loggingOut}>
                     {
                         loggingOut
-                            ? <span className="spinner-border spinnder-border-sm"></span>
+                            ? <span className="spinner-border spinner-border-sm"></span>
                             : <span>Logout</span>
                     }
                 </button>
