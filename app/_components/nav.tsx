@@ -9,8 +9,6 @@ export default function Nav() {
     const userService = useUserService();
     const { currentUser } = userService;
 
-    if (!currentUser) return null;
-
     async function handleLogout() {
         setLoggingOut(true);
         await userService.logout();
