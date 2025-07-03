@@ -33,18 +33,20 @@ export default function Nav() {
             </button>
 
             <div className={`collapse navbar-collapse ${!collapsed ? 'show' : ''}`} id="navbarNav">
-                <NavLink href="/" exact className="nav-item nav-link">Home</NavLink>
-                <NavLink href="/computers" className="nav-item nav-link">Computers</NavLink>
-                {(currentUser?.role === 'admin' ||
-                    currentUser?.role === 'superadmin') && (
-                        <NavLink href="/users" className="nav-item nav-link">Users</NavLink>)}
-                <button onClick={handleLogout} className="btn btn-link nav-item nav-link" style={{ width: '67px' }} disabled={loggingOut}>
-                    {
-                        loggingOut
-                            ? <span className="spinner-border spinner-border-sm"></span>
-                            : <span>Logout</span>
-                    }
-                </button>
+                <div className="navbar-nav">
+                    <NavLink href="/" exact className="nav-item nav-link">Home</NavLink>
+                    <NavLink href="/computers" className="nav-item nav-link">Computers</NavLink>
+                    {(currentUser?.role === 'admin' ||
+                        currentUser?.role === 'superadmin') && (
+                            <NavLink href="/users" className="nav-item nav-link">Users</NavLink>)}
+                    <button onClick={handleLogout} className="btn btn-link nav-item nav-link" style={{ width: '67px' }} disabled={loggingOut}>
+                        {
+                            loggingOut
+                                ? <span className="spinner-border spinner-border-sm"></span>
+                                : <span>Logout</span>
+                        }
+                    </button>
+                </div>
             </div>
         </nav >
     );
