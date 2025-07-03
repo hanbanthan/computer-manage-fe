@@ -8,15 +8,14 @@ interface INavLink {
     href: string,
     exact?: boolean,
     [key: string]: unknown,
+    className?: string;
 }
 
-export default function NavLink({ children, href, exact, ...props }: INavLink) {
+export default function NavLink({ children, href, exact, className = "", ...props }: INavLink) {
     const pathname = usePathname();
     const isActive = exact ? pathname === href : pathname.startsWith(href);
 
-    if (isActive) {
-        props.className +=' active';
-    }
+    const combinedClassName = `${className} ${isActive ? "active" : ""}`.trim();
     
-    return <Link href={href} {...props}>{children}</Link>;
+    return <Link href={href} className={combinedClassName} {...props}>{children}</Link>;
 }
