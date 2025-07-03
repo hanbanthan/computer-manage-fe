@@ -76,8 +76,8 @@ export default function Users() {
                                         </button>
 
                                         {activeDropdownUserId === user.user_id && (
-                                            <div 
-                                                className="dropdown-menu show position-absolute mt-1" 
+                                            <div
+                                                className="dropdown-menu show position-absolute mt-1"
                                             >
                                                 <button
                                                     onClick={() => {
@@ -132,18 +132,20 @@ export default function Users() {
                 {currentUser?.role === 'superadmin' && <Link href="/users/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Admin</Link>}
             </div>
 
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Username</th>
-                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Role</th>
-                        <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <TableBody />
-                </tbody>
-            </table>
+            <div className="table-responsive">
+                <table className="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Username</th>
+                            <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}>Role</th>
+                            <th style={{ width: '30%', backgroundColor: '#808080', color: 'white' }}></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <TableBody />
+                    </tbody>
+                </table>
+            </div>
         </>
     );
 }
