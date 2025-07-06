@@ -34,7 +34,7 @@ describe('Computers Page', () => {
   let getAllMock: jest.Mock;
 
   beforeEach(() => {
-    getAllMock = jest.fn(); 
+    getAllMock = jest.fn();
     (useUserService as jest.Mock).mockReturnValue({
       currentUser: { role: 'admin' },
     });
@@ -45,6 +45,8 @@ describe('Computers Page', () => {
     });
   });
 
+  afterEach(() => jest.clearAllMocks());
+
   it('calls getAll with default sort order DESC(newest)', () => {
     render(<Computers />);
     expect(getAllMock).toHaveBeenCalledWith("DESC");
@@ -54,7 +56,8 @@ describe('Computers Page', () => {
     render(<Computers />);
     const select = screen.getByLabelText(/Sort by:/i);
     fireEvent.change(select, { target: { value: 'oldest' } });
-    expect(getAllMock).toHaveBeenCalledWith("ASC");
+    expect(getAllMock).toHaveBeenNthCalledWith(1, "DESC");
+    expect(getAllMock).toHaveBeenNthCalledWith(2, "ASC");
   })
 
   it('render title', () => {
