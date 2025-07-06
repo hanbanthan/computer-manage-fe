@@ -129,11 +129,11 @@ export default function Computers() {
         <>
             <h1 className="mb-3">Computers</h1>
 
-            <div className="d-flex align-items-center mb-3">
+            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 {(currentUser?.role === 'admin' ||
                     currentUser?.role === 'superadmin') && (
                         <div>
-                            <Link href="/computers/add" className="btn btn-sm btn-success mb-2" style={{ height: '38px' }}>Add Computer</Link>
+                            <Link href="/computers/add" className="btn btn-sm btn-success" style={{ height: '38px' }}>Add Computer</Link>
                         </div>)}
                 <div className="d-flex align-items-center ms-auto gap-2">
                     <div className="d-flex align-items-center">
