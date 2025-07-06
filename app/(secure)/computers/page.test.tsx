@@ -1,11 +1,9 @@
 import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
-import { useAuth } from '@/app/_context/auth-context';
 import useUserService from '@/app/_services/useUserService';
 import useComputerService from '@/app/_services/useComputerService';
 import Computers from './page';
 
-jest.mock('@/app/_context/auth-context');
 jest.mock('@/app/_services/useComputerService');
 jest.mock('@/app/_services/useUserService');
 
@@ -31,56 +29,65 @@ const mockedComputers = [
     note: 'Second test',
   },
 ];
- 
+
 describe('Computers Page', () => {
-    beforeEach(() => {
-        //Mock token
-        (useAuth as jest.Mock).mockReturnValue({ token: 'fake-token' });
+  let getAllMock: jest.Mock;
 
-        //Mock current user
-        (useUserService as jest.Mock).mockReturnValue({
-            currentUser: { role: 'admin' },
-        });
-
-        //Mock computer service
-        (useComputerService as jest.Mock).mockReturnValue({
-            computers: mockedComputers,
-            getAll: jest.fn(),
-            deleteById: jest.fn(),
-        });
+  beforeEach(() => {
+    getAllMock = jest.fn(); 
+    (useUserService as jest.Mock).mockReturnValue({
+      currentUser: { role: 'admin' },
     });
 
-    it('render title', () => {
-        render(<Computers />);
-        expect(screen.getByText('Computers')).toBeInTheDocument();
+    (useComputerService as jest.Mock).mockReturnValue({
+      computers: mockedComputers,
+      getAll: getAllMock,
     });
+  });
 
-    it('displays computers data in table', () => {
-      render(<Computers />);
-      expect(screen.getByText('Computer A')).toBeInTheDocument();
-      expect(screen.getByText('Computer B')).toBeInTheDocument();
-      expect(screen.getAllByText('Detail')).toHaveLength(2);
-      expect(screen.getAllByText('Delete')).toHaveLength(2);
-    });
+  it('calls getAll with default sort order DESC(newest)', () => {
+    render(<Computers />);
+    expect(getAllMock).toHaveBeenCalledWith("DESC");
+  })
 
-    it('filters computers by name', () => {
-      render(<Computers />);
-      const input = screen.getByPlaceholderText('🔍 Search Computers');
-      fireEvent.change(input, { target: { value: 'Computer A' } });
-      expect(screen.getByText('Computer A')).toBeInTheDocument();
-      expect(screen.queryByText('Computer B')).not.toBeInTheDocument();
-    });
+  it('changes sort mode and calls getAll with ASC when selecting "oldest"', () => {
+    render(<Computers />);
+    const select = screen.getByLabelText(/Sort by:/i);
+    fireEvent.change(select, { target: { value: 'oldest' } });
+    expect(getAllMock).toHaveBeenCalledWith("ASC");
+  })
 
-    it('shows Add Computer button only for admin or superadmin', () => {
-      render(<Computers />);
-      expect(screen.getByText('Add Computer')).toBeInTheDocument();
-    });
+  it('render title', () => {
+    render(<Computers />);
+    expect(screen.getByText('Computers')).toBeInTheDocument();
+  });
 
-    it('does not show Add Computer button for user', () => {
-      (useUserService as jest.Mock).mockReturnValue({
-        currentUser: { role: 'user' },
-      });
-      render(<Computers />);
-      expect(screen.queryByText('Add Computer')).not.toBeInTheDocument();
+  it('displays computers data in table', () => {
+    render(<Computers />);
+    expect(screen.getByText('Computer A')).toBeInTheDocument();
+    expect(screen.getByText('Computer B')).toBeInTheDocument();
+    expect(screen.getAllByText('Detail')).toHaveLength(2);
+    expect(screen.getAllByText('Delete')).toHaveLength(2);
+  });
+
+  it('filters computers by name', () => {
+    render(<Computers />);
+    const input = screen.getByPlaceholderText('🔍 Search Computers');
+    fireEvent.change(input, { target: { value: 'Computer A' } });
+    expect(screen.getByText('Computer A')).toBeInTheDocument();
+    expect(screen.queryByText('Computer B')).not.toBeInTheDocument();
+  });
+
+  it('shows Add Computer button only for admin or superadmin', () => {
+    render(<Computers />);
+    expect(screen.getByText('Add Computer')).toBeInTheDocument();
+  });
+
+  it('does not show Add Computer button for user', () => {
+    (useUserService as jest.Mock).mockReturnValue({
+      currentUser: { role: 'user' },
     });
+    render(<Computers />);
+    expect(screen.queryByText('Add Computer')).not.toBeInTheDocument();
+  });
 });
