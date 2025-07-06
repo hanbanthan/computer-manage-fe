@@ -128,14 +128,14 @@ export default function Computers() {
     return (
         <>
             <h1 className="mb-3">Computers</h1>
-
-            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
                 {(currentUser?.role === 'admin' ||
                     currentUser?.role === 'superadmin') && (
                         <div>
                             <Link href="/computers/add" className="btn btn-sm btn-success" style={{ height: '38px' }}>Add Computer</Link>
                         </div>)}
-                <div className="d-flex align-items-center ms-auto gap-2">
+
+                <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 ms-md-auto">
                     <div className="d-flex align-items-center">
                         <label htmlFor="sort-select" className="text-sm text-gray-600 me-2 mb-0" style={{ whiteSpace: 'nowrap' }}>
                             Sort by:
