@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import useUserService from '@/app/_services/useUserService';
 import useComputerService from '@/app/_services/useComputerService';
-import Computers from './page';
+import Computers from '../(secure)/computers/page';
 
 jest.mock('@/app/_services/useComputerService');
 jest.mock('@/app/_services/useUserService');
