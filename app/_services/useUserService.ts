@@ -122,20 +122,16 @@ export default function useUserService(): IUserService {
             }
         },
         createNewAdmin: async (username: string, password: string) => {
-            try {
-                const response = await fetch(`${env.be.url}/api/superadmin-auth/create-admin`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ username, password }),
-                });
+            const response = await fetch(`${env.be.url}/api/superadmin-auth/create-admin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ username, password }),
+            });
 
-                if (!response.ok) throw new Error('Failed to create admin');
-            } catch (error) {
-                alertService.error(error instanceof Error ? error.message : String(error));
-            }
+            if (!response.ok) throw new Error('Failed to create admin');
         },
         deleteUser: async (user_id: string) => {
             try {
