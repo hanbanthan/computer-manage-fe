@@ -30,8 +30,8 @@ export default function AddAdmin({ title }: { title: string }) {
         try {
             const message = 'Admin added';
             await userService.createNewAdmin(data.username, data.password);
-            router.push('/users');
             alertService.success(message, true);
+            router.push('/users');
         } catch (error) {
             alertService.error(
                 error instanceof Error ? error.message : String(error)
